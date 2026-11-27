@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Entry program for make.fun news-image-20261127.
+"""news-image-20261127 entrypoint.
 
-The front page is drawn offline by generate.py and shipped in this repo
-as entry.png. This program just copies that finished image to the path
-the grader reads, so both grading runs produce identical bytes.
+Ships the finished front page: reads the PNG sitting next to this file
+and writes it to /output/entry.png, the path the grader reads. The picture
+was rendered ahead of time by generate.py, so the two grading runs both
+receive the exact same bytes without any drawing at grade time.
 """
-from pathlib import Path
-import shutil
+import os
 
-SOURCE = Path(__file__).resolve().with_name("entry.png")
-TARGET = Path("/output/entry.png")
+HERE = os.path.dirname(os.path.abspath(__file__))
+SRC = os.path.join(HERE, "entry.png")
+DST = "/output/entry.png"
 
-TARGET.parent.mkdir(parents=True, exist_ok=True)
-shutil.copyfile(SOURCE, TARGET)
+os.makedirs(os.path.dirname(DST), exist_ok=True)
+with open(SRC, "rb") as fin, open(DST, "wb") as fout:
+    fout.write(fin.read())
